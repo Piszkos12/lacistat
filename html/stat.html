@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="utf-8">
+    <title>lacistat</title>
+    <meta name="viewport" content="user-scalable=no, width=1920, width=1080">
+    <link rel="stylesheet" type="text/css" href="/css/transparent.css">
+    <script>
+        var checkInterval = 10000;
+
+        function init() {
+            document.body.style.opacity = "1";
+            setTimeout(stateChecker, checkInterval);
+        }
+
+        function stateChecker() {
+            var xmlhttp = new XMLHttpRequest();
+            var formData = new FormData();
+            formData.append("event", "getState");
+            xmlhttp.open("POST", "/", true);
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        if (xmlhttp.responseText != "stat") {
+                            document.body.style.opacity = "0";
+                            setTimeout(function() {
+                                location = "/";
+                            }, 1000);
+                        } else {
+                            setTimeout(stateChecker, checkInterval);
+                        }
+                    }
+                }
+            }
+            xmlhttp.send(formData);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <span class="lacitext textoutline" style="position: fixed; top:10px; left:10px">[STAT]</span>
+</body>
+
+</html>

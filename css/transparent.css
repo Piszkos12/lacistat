@@ -1,0 +1,39 @@
+html,
+body {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    width: 1920px;
+    height: 1080px;
+    font-family: "Lucida Console", Courier, monospace;
+    overflow: hidden;
+}
+
+body {
+    transition: all 1s;
+    opacity: 0;
+}
+
+.lacitext {
+    color: #80ff80;
+    font-size: 1vw;
+    padding: 4px
+}
+
+.textshadow {
+    text-shadow: 0 0 3px #000;
+}
+
+.textoutline {
+    -webkit-text-stroke: 0.5px black;
+}
+
+.textbackground {
+    border-radius: 4px;
+    background-color: #00000088;
+    box-shadow: 0 0 10px #00000088;
+}
+
+.hide {
+    opacity: 0;
+}

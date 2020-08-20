@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="utf-8">
+    <title>lacistat</title>
+    <meta name="viewport" content="user-scalable=no, width=1920, width=1080">
+    <link rel="stylesheet" type="text/css" href="/css/transparent.css">
+    <script>
+        var checkInterval = 1000;
+
+        function init() {
+            document.getElementById("title").style.opacity = "1";
+            document.body.style.opacity = "1";
+            setTimeout(stateChecker, checkInterval);
+        }
+
+        function stateChecker() {
+            var xmlhttp = new XMLHttpRequest();
+            var formData = new FormData();
+            formData.append("event", "getState");
+            xmlhttp.open("POST", "/", true);
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        if (xmlhttp.responseText != "initial") {
+                            document.body.style.opacity = "0";
+                            setTimeout(function() {
+                                location = "/";
+                            }, 1000);
+                        } else {
+                            setTimeout(stateChecker, checkInterval);
+                        }
+                    }
+                }
+            }
+            xmlhttp.send(formData);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div style="display: flex; flex-direction: column; width: 1920px; height: 1080px">
+        <div style="flex-grow: 1;"></div>
+        <div style="flex-grow: 1;">
+            <center><img id="title" src="/graph/lacistat.png" style="opacity: 0; transition: all 5s;"></center>
+        </div>
+        <div style="flex-grow: 1;">
+            <center><span class="lacitext textshadow textbackground">🍺 just for fun demo by Piszkos12 🍺</span>
+            </center>
+        </div>
+        <div style="flex-grow: 1;">
+            <center><span class="lacitext textoutline">broadcast status: waiting for game...</span></center>
+        </div>
+        <div style="flex-grow: 1;"></div>
+    </div>
+</body>
+
+</html>

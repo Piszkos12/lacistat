@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="utf-8">
+    <title>lacistat</title>
+    <meta name="viewport" content="user-scalable=no, width=1920, width=1080">
+    <link rel="stylesheet" type="text/css" href="/css/transparent.css">
+    <script>
+        var checkInterval = 1000;
+        var notifElement;
+        var players = [];
+
+        function init() {
+            document.body.style.opacity = "1";
+            setTimeout(stateChecker, checkInterval);
+            setTimeout(eventChecker, checkInterval);
+        }
+
+        function stateChecker() {
+            var xmlhttp = new XMLHttpRequest();
+            var formData = new FormData();
+            formData.append("event", "getState");
+            xmlhttp.open("POST", "/", true);
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        if (xmlhttp.responseText != "game") {
+                            document.body.style.opacity = "0";
+                            setTimeout(function() {
+                                location = "/";
+                            }, 1000);
+                        } else {
+                            setTimeout(stateChecker, checkInterval);
+                        }
+                    }
+                }
+            }
+            xmlhttp.send(formData);
+        }
+
+        function eventChecker() {
+            var xmlhttp = new XMLHttpRequest();
+            var formData = new FormData();
+            formData.append("event", "getEvents");
+            xmlhttp.open("POST", "/", true);
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        var data = JSON.parse(xmlhttp.responseText);
+                        if (data.length) {
+                            for (var i = 0; i < data.length; i++) {
+                                var e = data[i];
+                                if (e.event == "newNPC") {
+                                    document.getElementById("Boomer").style.opacity = '0';
+                                    document.getElementById("Charger").style.opacity = '0';
+                                    document.getElementById("Hunter").style.opacity = '0';
+                                    document.getElementById("Smoker").style.opacity = '0';
+                                    document.getElementById("Spitter").style.opacity = '0';
+                                    document.getElementById("Tank").style.opacity = '0';
+                                    document.getElementById("Witcher").style.opacity = '0';
+                                    document.getElementById("Jockey").style.opacity = '0';
+                                    var element = document.getElementById(e.name);
+                                    if (element) {
+                                        element.style.opacity = '1';
+                                        setTimeout(function() {
+                                            element.style.opacity = '0';
+                                        }, 5000);
+                                    }
+                                }
+                                if (e.event == "newclient") {
+                                    createNotif(e.name + " connected", "#80ff80", 5000);
+                                }
+                                if (e.event == "closeClient") {
+                                    createNotif(e.name + " left the game", "#ffff80", 5000);
+                                }
+                                if (e.event == "setMap") {
+                                    document.getElementById("map").innerText = "map:" + e.map;
+                                }
+                            }
+                        }
+                        setTimeout(eventChecker, checkInterval);
+                    }
+                }
+            }
+            xmlhttp.send(formData);
+        }
+
+        // Notification
+        function createNotif(text, color, timeOut) {
+            if (notifElement == undefined) {
+                notifElement = document.createElement('div');
+                document.body.appendChild(notifElement);
+            }
+            notifElement.style.position = 'absolute';
+            notifElement.style.bottom = '32px';
+            notifElement.style.padding = '10px 10px';
+            notifElement.style.border = '1px solid black';
+            notifElement.style.borderRadius = '5px';
+            notifElement.style.boxShadow = '0 0 10px #000';
+            notifElement.innerHTML = text;
+            notifElement.style.backgroundColor = color;
+            notifElement.style.zIndex = 999;
+            notifElement.style.display = 'block';
+            notifElement.style.transition = 'all .4s';
+            setTimeout(function() {
+                notifElement.style.opacity = '1';
+                notifElement.style.left = '32px';
+            }, 1);
+            setTimeout(function() {
+                notifElement.style.opacity = '0';
+                notifElement.style.left = '-100px';
+            }, timeOut);
+            notifElement.style.opacity = '0';
+            notifElement.style.left = '-100px';
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <span id="map" style="position: fixed; left: 10px; top:10px" class="lacitext textshadow textbackground">map:[MAP]</span>
+    <span style="position: fixed; right: 10px; top:10px" class="lacitext textshadow textbackground">lacistat</span>
+    <div id="Boomer" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/boomer.png">
+        <span class="lacitext textshadow textbackground">boomer is coming :)</span>
+    </div>
+    <div id="Charger" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/charger.png">
+        <span class="lacitext textshadow textbackground">charger is coming :)</span>
+    </div>
+    <div id="Hunter" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/hunter.gif">
+        <span class="lacitext textshadow textbackground">hunter is coming :)</span>
+    </div>
+    <div id="Smoker" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/smoker.png">
+        <span class="lacitext textshadow textbackground">smoker is coming :)</span>
+    </div>
+    <div id="Spitter" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/spitter.png">
+        <span class="lacitext textshadow textbackground">spitter is coming :)</span>
+    </div>
+    <div id="Tank" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/tank.png">
+        <span class="lacitext textshadow textbackground">tank is coming :)</span>
+    </div>
+    <div id="Witcher" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/witcher.png">
+        <span class="lacitext textshadow textbackground">witcher is coming :)</span>
+    </div>
+    <div id="Jockey" class="hide" style="position: fixed; left: 10px; top: 50px; background-color: transparent;">
+        <img src="/graph/jockey.png">
+        <span class="lacitext textshadow textbackground">jockey is coming :)</span>
+    </div>
+</body>
+
+</html>
